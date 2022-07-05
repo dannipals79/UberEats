@@ -1,31 +1,35 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const RestaurantItem = ({ restaurant }) => {
+  const navigation = useNavigation();
+
+  const onPress = () => {
+    navigation.navigate("Restaurant", { id: restaurant.id });
+  };
+
   return (
-    <View style={styles.restaurantContainer}>
-      <Text> Uber eats app!! </Text>
+    <Pressable onPress={onPress} style={styles.restaurantContainer}>
       <Image
         source={{
           uri: restaurant.image,
         }}
         style={styles.image}
       />
-      <View style={styles.row}> 
-        <View> 
+      <View style={styles.row}>
+        <View>
           <Text style={styles.title}> {restaurant.name} </Text>
           <Text style={styles.subtitle}>
-            ${restaurant.deliveryFee} •  {""}
+            ${restaurant.deliveryFee} • {""}
             {restaurant.minDeliveryTime}-{restaurant.maxDeliveryTime} minutes
           </Text>
+        </View>
+
+        <View style={styles.rating}>
+          <Text> {restaurant.rating} </Text>
+        </View>
       </View>
-
-      <View style={styles.rating}>
-        <Text> {restaurant.rating} </Text>
-
-      </View>
-
-    </View>
-  </View>
+    </Pressable>
   );
 };
 
@@ -50,19 +54,18 @@ const styles = StyleSheet.create({
   subtitle: {
     color: "grey",
   },
-  row:{
-    flexDirection:'row',
-    alignItems:'center',    
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  rating:{
-    marginLeft:"auto",
-    backgroundColor:'lightgrey',
-    padding:7,
-    borderRadius:10,
-    width:40,
-    height:35,
+  rating: {
+    marginLeft: "auto",
+    backgroundColor: "lightgrey",
+    padding: 7,
+    borderRadius: 10,
+    width: 40,
+    height: 35,
     alignItems: "top",
-    justifyContent:"top",     
-  }
-
+    justifyContent: "top",
+  },
 });
