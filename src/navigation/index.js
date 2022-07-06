@@ -1,11 +1,16 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+
+// ***BUG*** import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+
 import HomeScreen from "../screens/HomeScreen";
 import RestuarantDetailsScreen from "../screens/RestaurantDetailsScreen";
 import DishDetailsScreen from "../screens/DishDetailScreen";
 import Basket from "../screens/Basket";
 import OrderScreen from "../screens/OrdersScreen";
 import OrderDetials from "../screens/OrderDetails";
+import ProfileScreen from "../screens/ProfileScreen"; 
+
 
 import { Foundation } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -26,11 +31,11 @@ const RootNavigator = () => {
   );
 };
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 const HomeTabs = () => {
   return (
-    <Tab.Navigator barStyle={{ backgroundColor: "white" }}>
+    <Tab.Navigator screenOptions={ {headerShown: false} } barStyle={{ backgroundColor: "white" }}>
       <Tab.Screen
         name="Home"
         component={HomeStackNavigator}
@@ -51,7 +56,7 @@ const HomeTabs = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={OrderScreen}
+        component={ProfileScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="user-alt" size={24} color={color} />
