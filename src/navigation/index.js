@@ -10,6 +10,7 @@ import Basket from "../screens/Basket";
 import OrderScreen from "../screens/OrdersScreen";
 import OrderDetials from "../screens/OrderDetails";
 import ProfileScreen from "../screens/ProfileScreen"; 
+import {useAuthContext} from "../context/AuthContext"; 
 
 
 import { Foundation } from "@expo/vector-icons";
@@ -19,14 +20,16 @@ import { MaterialIcons } from "@expo/vector-icons";
 const Stack = createNativeStackNavigator();
 
 const RootNavigator = () => {
+  const {dbUser} = useAuthContext();
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="HomeTabs" component={HomeTabs} />
-      {/* <Stack.Screen
-        name="Restaurant"
-        component={RestuarantDetailsScreen}
-        options={{ headerShown: true }}
-      /> */}
+      {dbUser ? (
+        <Stack.Screen name="HomeTabs" component={HomeTabs} />
+      ) : (
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+      )
+      }           
+   
     </Stack.Navigator>
   );
 };
