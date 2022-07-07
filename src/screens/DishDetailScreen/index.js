@@ -1,18 +1,39 @@
-import { useState } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import restaurants from "../../../assets/data/restaurants.json";
 import { AntDesign } from "@expo/vector-icons";
-import { useNavigation  } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { DataStore } from "aws-amplify";
+import { Dish } from "../../models";
 
-const dish = restaurants[0].dishes[0];
+// const dish = restaurants[0].dishes[0];
 
 const DishDetailsScreen = () => {
+  const [dish, setDish] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  
+
   const navigation = useNavigation();
   // const state = useState();
   // const value = state[0]
   // const setter = state[1]
+  const route = useRoute();
+  const id = route.params?.id;
+
+  useEffect(() => {
+    if (id) {
+      DataStore.query(Dish, id).then(setDish);
+    }
+  }, [id]);
+
+  if (!dish) {
+    return <ActivityIndicator size="large" color="grey" />;
+  }
 
   const onMinus = () => {
     if (quantity > 1) setQuantity(quantity - 1);
@@ -52,7 +73,7 @@ const DishDetailsScreen = () => {
         style={styles.button}
       >
         <Text style={styles.buttonText}>
-          Add {quantity} to basket $({getTotal()}) 
+          Add {quantity} to basket $({getTotal()})
         </Text>
       </Pressable>
     </View>
