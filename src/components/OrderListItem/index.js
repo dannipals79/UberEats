@@ -18,7 +18,7 @@ const OrderListItem = ({ order }) => {
         <Text style={{ fontWeight: "600", fontSize: 16 }}>
           {order.Restaurant.name}
         </Text>
-        <Text style={{ marginVertial: 5 }}> 3 items &#8226; 38.45 </Text>
+        <Text style={{ marginVertical: 5 }}> 3 items &#8226; 38.45 </Text>
         <Text> 2 days agon - {order.status} </Text>
       </View>
     </Pressable>
