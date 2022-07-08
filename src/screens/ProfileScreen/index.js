@@ -4,16 +4,42 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Auth, DataStore } from "aws-amplify";
 import { User } from "../../models";
 import { useAuthContext } from "../../context/AuthContext";
+import { useNavigation } from "@react-navigation/native";
 
 const Profile = () => {
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [lat, setLat] = useState("0");
-  const [lng, setLng] = useState("0");
+  const { dbUser } = useAuthContext();
+
+  const [name, setName] = useState(dbUser?.name || "");
+  const [address, setAddress] = useState(dbUser?.address || "");
+  const [lat, setLat] = useState(dbUser?.lat + "" || "0");
+  const [lng, setLng] = useState(dbUser?.lng + "" || "0");
 
   const { sub, setDbUser } = useAuthContext();
 
+  const navigation = useNavigation();
+
   const onSave = async () => {
+    if (dbUser) {
+      await updateUser();
+    } else {
+      await createUser();
+    }
+    navigation.goBack();
+  };
+
+  const updateUser = async () => {
+    const user = await DataStore.save(
+      User.copyOf(dbUser, (updated) => {
+        updated.name = name;
+        updated.address = address;
+        updated.lat = parseFloat(lat);
+        updated.lng = parseFloat(lng);
+      })
+    );
+    setDbUser(user);
+  };
+
+  const createUser = async () => {
     try {
       const user = await DataStore.save(
         new User({
@@ -24,8 +50,7 @@ const Profile = () => {
           sub,
         })
       );
-      
-      setDbUser(user); 
+      setDbUser(user);
     } catch (e) {
       Alert.alert("Error", e.message);
     }
@@ -64,7 +89,6 @@ const Profile = () => {
         onPress={() => Auth.signOut()}
         style={{ textAlign: "center", color: "red", margin: 10 }}
       >
-        {" "}
         Sign out
       </Text>
     </SafeAreaView>
